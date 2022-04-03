@@ -133,3 +133,14 @@ addEventListener('dblclick', () => {
         document.documentElement.requestFullscreen();
     }
 })
+
+addEventListener('keydown', (e) => {
+    if(e.key === 'f') {
+        //fullscreen
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.documentElement.requestFullscreen();
+        }
+    }
+})
