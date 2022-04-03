@@ -114,8 +114,9 @@ addEventListener('DOMContentLoaded', () => {
         if (hours < 1) {
             timer_element.style.fontSize = '15vw';
             clock.innerText = time_format(new Date(time));
+            clock.style.fontSize = '1em'
         } else {
-            timer_element.style.fontSize = '1vw';
+            timer_element.style.fontSize = '1em';
             clock.innerText = time_format(new Date(time), true);
             clock.style.fontSize = '15vw';
         }
