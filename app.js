@@ -45,7 +45,7 @@ function time_format(time, show_second = false) {
     let hour = number_padding(time.getHours() % 12);
     let minute = number_padding(time.getMinutes());
     let second = number_padding(time.getSeconds());
-    return `${hour == '00' ? '12' : hour}${separator}${minute}${show_second ? separator + second : ''} ${time.getHours() >= 12 ? 'PM' : 'AM'}`;
+    return `${hour === '00' ? '12' : hour}${separator}${minute}${show_second ? separator + second : ''} ${time.getHours() >= 12 ? 'PM' : 'AM'}`;
 }
 
 addEventListener('DOMContentLoaded', () => {
@@ -81,28 +81,55 @@ addEventListener('DOMContentLoaded', () => {
         const hour_element = document.querySelector('#hour');
         const minute_element = document.querySelector('#minute');
         const second_element = document.querySelector('#second');
-        if (days == 0) {
+        if (days === 0) {
             day_element.innerText = '';
         } else {
             day_element.innerText = number_padding(days) + separator;
         }
-        if(days == 0 && hours == 0) {
+        if (days === 0 && hours === 0) {
             hour_element.innerText = '';
         } else {
             hour_element.innerText = number_padding(hours) + separator;
         }
-        if(days == 0 && hours == 0 && minutes == 0) {
+        if (days === 0 && hours === 0 && minutes === 0) {
             minute_element.innerText = '';
         } else {
-            minute_element.innerText = number_padding(minutes) + separator;
+            if (hours < 1) {
+                minute_element.innerText = number_padding(minutes) + separator;
+            } else {
+                minute_element.innerText = number_padding(minutes);
+            }
         }
-        if(days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+        if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
             second_element.innerText = '';
         } else {
-            second_element.innerText = number_padding(seconds);
+            if (hours < 1) {
+                second_element.innerText = number_padding(seconds);
+            } else {
+                second_element.innerText = '';
+            }
         }
-        document.querySelector('#time').innerText = time_format(new Date(time), true);
+        const clock = document.querySelector('#time');
+        let timer_element = document.querySelector('#timer');
+        if (hours < 1) {
+            timer_element.style.fontSize = '15vw';
+            clock.innerText = time_format(new Date(time));
+        } else {
+            timer_element.style.fontSize = '1vw';
+            clock.innerText = time_format(new Date(time), true);
+            clock.style.fontSize = '15vw';
+        }
     }
+
     main();
     setInterval(main, 1000);
+})
+
+addEventListener('dblclick', () => {
+    //fullcreen
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen();
+    }
 })

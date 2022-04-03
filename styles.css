@@ -2,9 +2,10 @@
 *,
 *::before,
 *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    line-height: 1em;
 }
 
 body {
@@ -16,8 +17,4 @@ body {
     color: white;
     background: #000;
     flex-direction: column;
-}
-
-h1{
-    font-size: 15vw;
 }
