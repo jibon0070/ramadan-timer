@@ -1,0 +1,25 @@
+.notification{
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  background: rgba(255, 255, 255, 0.5);
+  padding: .5em 1em;
+  transform: translateX(calc(100% + 1em));
+  animation: anim 5s ease-in-out forwards;
+  border-radius: 5px;
+}
+
+@keyframes anim {
+  0% {
+    transform: translateX(calc(100% + 1em));
+  }
+  10%{
+    transform: translateX(0);
+  }
+  90%{
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(100% + 1em));
+  }
+}
