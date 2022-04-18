@@ -23,6 +23,13 @@ export default class App extends Component {
         time_remaining: '',
     }
 
+    animate() {
+        this.screen_ref.current.classList.add('animate');
+        setTimeout(() => {
+            this.screen_ref.current.classList.remove('animate');
+        }, 5 * 1000);
+    }
+
     fullscreen() {
         if (!this.is_fullscreen)
             document.body.requestFullscreen();
@@ -69,6 +76,7 @@ export default class App extends Component {
             "2022-05-02": ['03:59 AM', '06:31 PM'],
             "2022-05-03": ['03:58 AM', '06:31 PM'],
         }
+        this.screen_ref = createRef();
     }
 
 
@@ -99,8 +107,42 @@ export default class App extends Component {
         let hours = time.getHours();
         let minutes = time.getMinutes();
         let seconds = time.getSeconds();
-        return `${hours > 12 ? this.number_padding(hours - 12) : this.number_padding(hours)}:${this.number_padding(minutes)}${show_seconds ? `:${show_seconds ? this.number_padding(seconds) : ''}` : ''}${hours > 12 ? ' PM' : ' AM'}`;
+        return `${hours % 12 === 0 ? 12 : this.number_padding(hours % 12)}:${this.number_padding(minutes)}${show_seconds ? `:${show_seconds ? this.number_padding(seconds) : ''}` : ''}${hours > 12 ? ' PM' : ' AM'}`;
     }
+
+    ten_hour_animation_shown = true;
+    //10 hours in milliseconds
+    TEN_HOUR_REMAINING = 10 * 60 * 60 * 1000;
+
+    five_hour_animation_shown = true;
+    //5 hours in milliseconds
+    FIVE_HOURS_REMAINING = 1000 * 60 * 60 * 5;
+
+    one_hour_animation_shown = true;
+    //1 hour in milliseconds
+    ONE_HOUR_REMAINING = 1000 * 60 * 60;
+
+    thirty_minutes_animation_shown = true;
+    //30 minutes in milliseconds
+    THIRTY_MINUTES_REMAINING = 1000 * 60 * 30;
+
+    ten_minutes_animation_shown = true;
+    //10 minutes in milliseconds
+    TEN_MINUTES_REMAINING = 1000 * 60 * 10;
+
+    five_minutes_animation_shown = true;
+    //5 minutes in milliseconds
+    FIVE_MINUTES_REMAINING = 1000 * 60 * 5;
+
+    one_minute_animation_shown = true;
+    //1 minute in milliseconds
+    ONE_MINUTE_REMAINING = 1000 * 60;
+
+    ten_seconds_animation_shown = true;
+    //10 seconds in milliseconds
+    TEN_SECONDS_REMAINING = 1000 * 10;
+
+
 
 
     main() {
@@ -150,14 +192,72 @@ export default class App extends Component {
         if (days === 0 && hours < 1) {
             time_remaining += `:${this.number_padding(seconds)}`;
             this.setState({clock: this.time_format(new Date(time))});
-            this.clock_ref.current.style.fontSize = "1em";
+            this.clock_ref.current.style.fontSize = "2em";
             this.timer_ref.current.style.fontSize = "18vw";
         } else {
             this.setState({clock: this.time_format(new Date(time), true)})
             this.clock_ref.current.style.fontSize = "18vw";
-            this.timer_ref.current.style.fontSize = "1em";
+            this.timer_ref.current.style.fontSize = "2em";
         }
         this.setState({time_remaining});
+
+        if (remaining > this.TEN_HOUR_REMAINING) {
+            this.ten_hour_animation_shown = false;
+        }
+        if (remaining > this.FIVE_HOURS_REMAINING) {
+            this.five_hour_animation_shown = false;
+        }
+        if (remaining > this.ONE_HOUR_REMAINING) {
+            this.one_hour_animation_shown = false;
+        }
+        if (remaining > this.THIRTY_MINUTES_REMAINING) {
+            this.thirty_minutes_animation_shown = false;
+        }
+        if (remaining > this.TEN_MINUTES_REMAINING) {
+            this.ten_minutes_animation_shown = false;
+        }
+        if (remaining > this.FIVE_MINUTES_REMAINING) {
+            this.five_minutes_animation_shown = false;
+        }
+        if (remaining > this.ONE_MINUTE_REMAINING) {
+            this.one_minute_animation_shown = false;
+        }
+        if (remaining > this.TEN_SECONDS_REMAINING) {
+            this.ten_seconds_animation_shown = false;
+        }
+
+        if (remaining < this.TEN_HOUR_REMAINING && !this.ten_hour_animation_shown) {
+            this.ten_hour_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.FIVE_HOURS_REMAINING && !this.five_hour_animation_shown) {
+            this.five_hour_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.ONE_HOUR_REMAINING && !this.one_hour_animation_shown) {
+            this.one_hour_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.THIRTY_MINUTES_REMAINING && !this.thirty_minutes_animation_shown) {
+            this.thirty_minutes_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.TEN_MINUTES_REMAINING && !this.ten_minutes_animation_shown) {
+            this.ten_minutes_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.FIVE_MINUTES_REMAINING && !this.five_minutes_animation_shown) {
+            this.five_minutes_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.ONE_MINUTE_REMAINING && !this.one_minute_animation_shown) {
+            this.one_minute_animation_shown = true;
+            this.animate();
+        }
+        else if (remaining < this.TEN_SECONDS_REMAINING && !this.ten_seconds_animation_shown) {
+            this.ten_seconds_animation_shown = true;
+            this.animate();
+        }
     }
 
     componentDidMount() {
@@ -169,7 +269,8 @@ export default class App extends Component {
     render() {
         return (<div onDoubleClick={this.fullscreen.bind(this)}>
             <Notification content='Press F or double click to view the full screen'/>
-            <Timer timer_ref={this.timer_ref} clock_ref={this.clock_ref} clock={this.state.clock}
+            <Timer screen_ref={this.screen_ref} timer_ref={this.timer_ref} clock_ref={this.clock_ref}
+                   clock={this.state.clock}
                    status={this.state.status}
                    time_remaining={this.state.time_remaining}/>
         </div>);

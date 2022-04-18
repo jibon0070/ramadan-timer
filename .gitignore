@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/ramadan-timer/build
+/build
 
 # misc
 .DS_Store

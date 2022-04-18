@@ -6,4 +6,19 @@
   background: #000;
   color: white;
   flex-direction: column;
+  &.animate{
+    animation: anims .1s linear infinite;
+  }
+}
+
+
+@keyframes anims {
+  0% {
+    background: white;
+    color: black;
+  }
+  100% {
+    background: black;
+    color: white;
+  }
 }
