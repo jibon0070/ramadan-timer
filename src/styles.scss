@@ -1,0 +1,35 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: "calculator";
+  src: url("../public/fonts/digital clock/wwDigital.ttf");
+}
+
+body {
+  background: black;
+  color: #da0000;
+  font-family: calculator, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  $initial: 105;
+  $gap: 10;
+  text-shadow: 0 0 1px rgb(255, 0, 0),
+  0 0 2px rgb(255, $initial, $initial),
+  0 0 4px rgb(255, $initial - $gap * 2, $initial - $gap * 2),
+  0 0 8px rgb(255, $initial - $gap * 3, $initial - $gap * 3),
+  0 0 16px rgb(255, $initial - $gap * 4, $initial - $gap * 4),
+  0 0 32px rgb(255, $initial - $gap * 5, $initial - $gap * 5);
+  user-select: none;
+  cursor: pointer;
+
+  .time, .remaining-time {
+    text-align: center;
+  }
+
+}
