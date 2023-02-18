@@ -103,7 +103,11 @@ function App() {
             set_remaining_time(`${number_padding(r_seconds)}`);
         else
             set_remaining_time("00");
-        set_time(`${number_padding(current_time.getHours() % 12 ?? 12)}:${number_padding(current_time.getMinutes())}:${number_padding(current_time.getSeconds())} ${current_time.getHours() >= 12 ? "PM" : "AM"}`);
+        const hour = current_time.getHours() % 12;
+        const minute = current_time.getMinutes();
+        const second = current_time.getSeconds();
+        let am_pm = current_time.getHours() >= 12 ? "PM" : "AM";
+        set_time(`${number_padding(hour ? hour : 12)}:${number_padding(minute)}:${number_padding(second)} ${am_pm}`);
     }
 
     function date_format(date: Date) {
