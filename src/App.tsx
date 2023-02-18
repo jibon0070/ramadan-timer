@@ -55,17 +55,17 @@ function App() {
 
         const remaining_seconds = Math.floor(remaining_time / 1000);
 
-        if (remaining_seconds === 60 * 60 * 5) five_hours_audio.play();
-        else if (remaining_seconds === 60 * 60 * 4) four_hours_audio.play();
-        else if (remaining_seconds === 60 * 60 * 3) three_hours_audio.play();
-        else if (remaining_seconds === 60 * 60 * 2) two_hours_audio.play();
-        else if (remaining_seconds === 60 * 60) one_hour_audio.play();
-        else if (remaining_seconds === 60 * 45) forty_five_minutes_audio.play();
-        else if (remaining_seconds === 60 * 30) thirty_minutes_audio.play();
-        else if (remaining_seconds === 60 * 15) fifteen_minutes_audio.play();
-        else if (remaining_seconds === 60 * 10) ten_minutes_audio.play();
-        else if (remaining_seconds === 60 * 5) five_minutes_audio.play();
-        else if (remaining_seconds === 60) one_minute_audio.play();
+        if (remaining_seconds === 60 * 60 * 5) five_hours_audio.play().then();
+        else if (remaining_seconds === 60 * 60 * 4) four_hours_audio.play().then();
+        else if (remaining_seconds === 60 * 60 * 3) three_hours_audio.play().then();
+        else if (remaining_seconds === 60 * 60 * 2) two_hours_audio.play().then();
+        else if (remaining_seconds === 60 * 60) one_hour_audio.play().then();
+        else if (remaining_seconds === 60 * 45) forty_five_minutes_audio.play().then();
+        else if (remaining_seconds === 60 * 30) thirty_minutes_audio.play().then();
+        else if (remaining_seconds === 60 * 15) fifteen_minutes_audio.play().then();
+        else if (remaining_seconds === 60 * 10) ten_minutes_audio.play().then();
+        else if (remaining_seconds === 60 * 5) five_minutes_audio.play().then();
+        else if (remaining_seconds === 60) one_minute_audio.play().then();
 
         if (remaining_time < 1000 * 60 * 60) {
             if (ref.remaining_time.current) {
@@ -158,9 +158,9 @@ function App() {
             e.preventDefault();
             //fullscreen
             if (document.fullscreenElement) {
-                document.exitFullscreen();
+                document.exitFullscreen().then();
             } else {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().then();
             }
         }}>
             <div className={"time"} ref={ref.time}>{time}</div>
