@@ -1,19 +1,17 @@
 import {useEffect, useRef, useState} from "react";
 import Xl from "read-excel-file";
 
-const five_hours_audio = new Audio("../public/voices/5 hours left.mp3")
-const four_hours_audio = new Audio("../public/voices/4 hours left.mp3")
-const three_hours_audio = new Audio("../public/voices/3 hours left.mp3")
-const two_hours_audio = new Audio("../public/voices/2 hours left.mp3")
-const one_hour_audio = new Audio("../public/voices/1 hour left.mp3")
-const forty_five_minutes_audio = new Audio("../public/voices/45 minutes left.mp3")
-const thirty_minutes_audio = new Audio("../public/voices/30 minutes left.mp3")
-const fifteen_minutes_audio = new Audio("../public/voices/15 minutes left.mp3")
-const ten_minutes_audio = new Audio("../public/voices/10 minutes left.mp3")
-const five_minutes_audio = new Audio("../public/voices/5 minutes left.mp3")
-const one_minute_audio = new Audio("../public/voices/1 minute left.mp3")
-
-let interval: any;
+const five_hours_audio = new Audio("/voices/5 hours left.mp3")
+const four_hours_audio = new Audio("/voices/4 hours left.mp3")
+const three_hours_audio = new Audio("/voices/3 hours left.mp3")
+const two_hours_audio = new Audio("/voices/2 hours left.mp3")
+const one_hour_audio = new Audio("/voices/1 hour left.mp3")
+const forty_five_minutes_audio = new Audio("/voices/45 minutes left.mp3")
+const thirty_minutes_audio = new Audio("/voices/30 minutes left.mp3")
+const fifteen_minutes_audio = new Audio("/voices/15 minutes left.mp3")
+const ten_minutes_audio = new Audio("/voices/10 minutes left.mp3")
+const five_minutes_audio = new Audio("/voices/5 minutes left.mp3")
+const one_minute_audio = new Audio("./voices/1 minute left.mp3")
 
 
 function App() {
@@ -114,22 +112,41 @@ function App() {
 
 
     useEffect(() => {
+        let interval: any;
+        const abortController = new AbortController();
+        let wake_lock: any;
         async function main() {
-            let data_url = `${window.location.href}datas/dhaka.xlsx`;
-            let data = await fetch(data_url)
-                .then(r => r.blob())
-                .then(blob => Xl(blob))
-                .then(data => data.map((data: any) => [new Date(data[0]).getTime(), new Date(`${data[0]} ${data[1]}`).getTime(), new Date(`${data[0]} ${data[2]}`).getTime()]));
-            calculate_time(data);
-            interval = setInterval(() => {
+            try {
+                wake_lock = await (navigator as any).wakeLock.request("screen");
+                window.addEventListener("focus", async () => {
+                    wake_lock = await (navigator as any).wakeLock.request("screen");
+                });
+                window.addEventListener("blur", async () => {
+                    await wake_lock.release();
+                    wake_lock = null;
+                })
+                let data_url = `${window.location.href}datas/dhaka.xlsx`;
+                let data = await fetch(data_url, {
+                    signal: abortController.signal
+                })
+                    .then(r => r.blob())
+                    .then(blob => Xl(blob))
+                    .then(data => data.map((data: any) => [new Date(data[0]).getTime(), new Date(`${data[0]} ${data[1]}`).getTime(), new Date(`${data[0]} ${data[2]}`).getTime()]));
                 calculate_time(data);
-            }, 1000);
+                interval = setInterval(() => {
+                    calculate_time(data);
+                }, 1000);
+            } catch (e) {
+                console.error(e);
+            }
         }
 
-        main();
+        main().then();
 
         return () => {
+            abortController.abort();
             clearInterval(interval);
+            wake_lock?.release();
         };
     }, []);
     return (
