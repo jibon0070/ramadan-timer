@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import Xl from "read-excel-file";
 
-const five_hours_audio = new Audio("/voices/5 hours left.mp3")
+const five_hours_audio = new Audio(/*"/voices/5 hours left.mp3"*/"/voices/5 hours left.mp3");
 const four_hours_audio = new Audio("/voices/4 hours left.mp3")
 const three_hours_audio = new Audio("/voices/3 hours left.mp3")
 const two_hours_audio = new Audio("/voices/2 hours left.mp3")
@@ -11,7 +11,7 @@ const thirty_minutes_audio = new Audio("/voices/30 minutes left.mp3")
 const fifteen_minutes_audio = new Audio("/voices/15 minutes left.mp3")
 const ten_minutes_audio = new Audio("/voices/10 minutes left.mp3")
 const five_minutes_audio = new Audio("/voices/5 minutes left.mp3")
-const one_minute_audio = new Audio("./voices/1 minute left.mp3")
+const one_minute_audio = new Audio("/voices/1 minute left.mp3")
 
 
 function App() {
