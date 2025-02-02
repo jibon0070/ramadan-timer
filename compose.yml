@@ -12,6 +12,8 @@ services:
       - /app/.next
       - /app/.cache
       - /app/build
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/db"
 
   db:
     image: postgres:16
