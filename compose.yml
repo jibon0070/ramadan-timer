@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: dev-ramadan-web
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -11,3 +12,13 @@ services:
       - /app/.next
       - /app/.cache
       - /app/build
+
+  db:
+    image: postgres:16
+    container_name: dev-ramadan-db
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "db"
+    volumes:
+      - ./storage/db-data:/var/lib/postgresql/data
