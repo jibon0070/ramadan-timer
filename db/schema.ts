@@ -25,3 +25,12 @@ export const UserModel = pgTable("users", {
   createdAt,
   updatedAt,
 });
+
+export const EventModel = pgTable("events", {
+  id: serial("id").primaryKey().notNull().unique(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  timestamp: timestamp("timestamp", { mode: "date" }).notNull(),
+  createdAt,
+  updatedAt,
+});
