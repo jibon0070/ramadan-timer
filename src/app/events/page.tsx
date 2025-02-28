@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Events | Admin Panel",
+  description: "View the up comming events",
 };
 
 export default async function Events() {
