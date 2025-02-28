@@ -16,6 +16,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DeleteEvent from "./components/delete/client";
 import Role from "@/types/role";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { EditIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 function useEngine() {
   const { toast } = useToast();
@@ -62,7 +65,14 @@ export default function Client({ role }: { role: Role | "visitor" }) {
             <TableCell>{event.description}</TableCell>
             <TableCell>
               {role === "admin" && (
-                <DeleteEvent id={event.id} refetch={refetch} />
+                <div className="flex gap-2">
+                  <Button asChild size={"icon"} className="rounded-full">
+                    <Link href={`/events/edit/${event.id}`}>
+                      <EditIcon />
+                    </Link>
+                  </Button>
+                  <DeleteEvent id={event.id} refetch={refetch} />
+                </div>
               )}
             </TableCell>
           </TableRow>
