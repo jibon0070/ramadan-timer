@@ -2,10 +2,10 @@
 
 import getAuth from "@/lib/auth";
 import ResponseWraper from "@/types/response-wraper";
-import schema from "../schemas/schema";
 import { z } from "zod";
 import db from "@/db";
 import { EventModel } from "@/schema";
+import schema from "../../../_partials/schemas/new-and-edit.schema";
 
 export default async function submitAction(
   uData: unknown,

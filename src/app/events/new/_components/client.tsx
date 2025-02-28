@@ -3,22 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import schema from "./schemas/schema";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import schema from "../../_partials/schemas/new-and-edit.schema";
 import { Button } from "@/components/ui/button";
 import useMutation from "@/hooks/use-mutation";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import submitAction from "./actions/submit.action";
+import Fields from "../../_partials/new-and-edit";
 
 export default function Client() {
   const router = useRouter();
@@ -65,48 +56,7 @@ export default function Client() {
 
   return (
     <form onSubmit={submit} className="space-y-5">
-      <Form {...form}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="timestamp"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Timestamp</FormLabel>
-              <FormControl>
-                {/*@ts-expect-error aaa*/}
-                <Input {...field} type="datetime-local" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </Form>
+      <Fields form={form} />
       <div className="flex justify-end items-center gap-2">
         <Button variant={"secondary"} type="button" onClick={back}>
           Back
