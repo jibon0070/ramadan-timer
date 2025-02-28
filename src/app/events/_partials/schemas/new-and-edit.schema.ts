@@ -8,6 +8,7 @@ const schema = z.object({
     .refine((value) => value.getTime() > new Date().getTime(), {
       message: "Date must be in the future.",
     }),
+  yearly: z.coerce.boolean().default(false),
 });
 
 export default schema;
