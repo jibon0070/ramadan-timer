@@ -1,0 +1,1 @@
+ALTER TABLE "events" ADD COLUMN "yearly" boolean DEFAULT false NOT NULL;
