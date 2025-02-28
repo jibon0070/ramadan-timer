@@ -17,7 +17,7 @@ import DeleteEvent from "./components/delete/client";
 import Role from "@/types/role";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { EditIcon } from "lucide-react";
+import { EditIcon, View } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function useEngine() {
@@ -64,16 +64,28 @@ export default function Client({ role }: { role: Role | "visitor" }) {
             <TableCell className="whitespace-nowrap">{event.name}</TableCell>
             <TableCell>{event.description}</TableCell>
             <TableCell>
-              {role === "admin" && (
-                <div className="flex gap-2">
-                  <Button asChild size={"icon"} className="rounded-full">
-                    <Link href={`/events/edit/${event.id}`}>
-                      <EditIcon />
-                    </Link>
-                  </Button>
-                  <DeleteEvent id={event.id} refetch={refetch} />
-                </div>
-              )}
+              <div className="flex gap-2">
+                <Button
+                  asChild
+                  size={`icon`}
+                  className="rounded-full"
+                  variant={`secondary`}
+                >
+                  <Link href={`/events/view/${event.id}`}>
+                    <View />
+                  </Link>
+                </Button>
+                {role === "admin" && (
+                  <>
+                    <Button asChild size={"icon"} className="rounded-full">
+                      <Link href={`/events/edit/${event.id}`}>
+                        <EditIcon />
+                      </Link>
+                    </Button>
+                    <DeleteEvent id={event.id} refetch={refetch} />
+                  </>
+                )}
+              </div>
             </TableCell>
           </TableRow>
         ))}
