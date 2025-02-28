@@ -22,7 +22,9 @@ export default async function Events() {
           "justify-between": role !== "visitor",
         })}
       >
-        <h1 className="text-3xl">Events</h1>
+        <Link href={`/`}>
+          <h1 className="text-3xl">Events</h1>
+        </Link>
         {role === "admin" && (
           <Button asChild>
             <Link href="/events/new">New</Link>
