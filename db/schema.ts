@@ -1,4 +1,5 @@
 import {
+  boolean,
   pgEnum,
   pgTable,
   serial,
@@ -31,6 +32,7 @@ export const EventModel = pgTable("events", {
   name: varchar("name").notNull(),
   description: text("description"),
   timestamp: timestamp("timestamp", { mode: "date" }).notNull(),
+  yearly: boolean("yearly").notNull().default(false),
   createdAt,
   updatedAt,
 });
