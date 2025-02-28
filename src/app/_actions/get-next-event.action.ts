@@ -1,7 +1,9 @@
 "use server";
 
 import db from "@/db";
+import { EventModel } from "@/schema";
 import ResponseWraper from "@/types/response-wraper";
+import { lte } from "drizzle-orm";
 
 type Event = {
   timestamp: Date;
@@ -15,6 +17,7 @@ export default async function getNextEventAction(): Promise<
   }>
 > {
   try {
+    await deletePreviousEvent();
     const event = await getEvent();
 
     return {
@@ -36,4 +39,8 @@ async function getEvent(): Promise<Event | null> {
     orderBy: (model, { asc }) => asc(model.timestamp),
     columns: { name: true, description: true, timestamp: true },
   }).then((r) => (!!r ? r : null));
+}
+
+async function deletePreviousEvent() {
+  await db.delete(EventModel).where(lte(EventModel.timestamp, new Date()));
 }
