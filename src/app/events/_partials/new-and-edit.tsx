@@ -59,6 +59,22 @@ export default function Fields({
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name="yearly"
+        render={({ field }) => (
+          <FormItem>
+            <label className="flex gap-2 items-center">
+              <input
+                type="checkbox"
+                onChange={(e) => form.setValue(field.name, e.target.checked)}
+                checked={form.watch(field.name)}
+              />
+              Yearly
+            </label>
+          </FormItem>
+        )}
+      />
     </Form>
   );
 }
