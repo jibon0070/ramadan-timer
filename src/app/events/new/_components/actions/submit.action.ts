@@ -40,9 +40,5 @@ async function parseData(data: unknown) {
 }
 
 async function save(data: z.infer<typeof schema>) {
-  await db.insert(EventModel).values({
-    name: data.name,
-    description: data.description,
-    timestamp: data.timestamp,
-  });
+  await db.insert(EventModel).values({ ...data });
 }
