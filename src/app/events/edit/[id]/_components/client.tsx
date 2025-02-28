@@ -17,7 +17,7 @@ function formatDate(date: Date): string {
   return `${date.getFullYear().toString().padStart(4, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}T${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, `0`)}`;
 }
 
-function useEngine({ id, name, description, timestamp }: Props) {
+function useEngine({ id, name, description, timestamp, yearly }: Props) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -25,6 +25,7 @@ function useEngine({ id, name, description, timestamp }: Props) {
       description: "",
       // @ts-expect-error aaa
       timestamp: "",
+      yearly: false,
     },
   });
   const router = useRouter();
@@ -36,8 +37,9 @@ function useEngine({ id, name, description, timestamp }: Props) {
       description: description || "",
       //@ts-expect-error aaa
       timestamp: formatDate(timestamp),
+      yearly,
     });
-  }, [description, form, name, timestamp]);
+  }, [description, form, name, timestamp, yearly]);
 
   function back() {
     router.back();
@@ -74,6 +76,7 @@ type Props = {
   name: string;
   description: string | null;
   timestamp: Date;
+  yearly: boolean;
 };
 
 export default function Client(props: Props) {
