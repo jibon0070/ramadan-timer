@@ -46,6 +46,7 @@ export default function DeleteEvent({
       variant={"destructive"}
       className="rounded-full"
       onClick={deleteEvent}
+      title="Delete Event"
     >
       <TrashIcon />
     </Button>

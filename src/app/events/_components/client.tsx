@@ -71,14 +71,17 @@ export default function Client({ role }: { role: Role | "visitor" }) {
                   className="rounded-full"
                   variant={`secondary`}
                 >
-                  <Link href={`/events/view/${event.id}`}>
+                  <Link href={`/events/view/${event.id}`} title="View Event">
                     <View />
                   </Link>
                 </Button>
                 {role === "admin" && (
                   <>
                     <Button asChild size={"icon"} className="rounded-full">
-                      <Link href={`/events/edit/${event.id}`}>
+                      <Link
+                        href={`/events/edit/${event.id}`}
+                        title="Edit Event"
+                      >
                         <EditIcon />
                       </Link>
                     </Button>
