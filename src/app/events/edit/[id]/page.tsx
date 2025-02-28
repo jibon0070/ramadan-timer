@@ -17,7 +17,7 @@ export default async function Edit(props: { params: Promise<{ id: string }> }) {
 
   const event = await db.query.EventModel.findFirst({
     where: (model, { eq }) => eq(model.id, id),
-    columns: { name: true, description: true, timestamp: true },
+    columns: { name: true, description: true, timestamp: true, yearly: true },
   });
 
   if (!event) return notFound();
@@ -28,6 +28,7 @@ export default async function Edit(props: { params: Promise<{ id: string }> }) {
       name={event.name}
       description={event.description}
       timestamp={event.timestamp}
+      yearly={event.yearly}
     />
   );
 }
