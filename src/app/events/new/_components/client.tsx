@@ -22,6 +22,7 @@ export default function Client() {
       description: "",
       //@ts-expect-error aaa
       timestamp: "",
+      yearly: false,
     },
   });
 
