@@ -21,6 +21,7 @@ export default function TimeDisplay({
   const [currentDate, setCurrentDate] = useState<Date | undefined>();
 
   useEffect(() => {
+    setCurrentDate(new Date());
     const timer = setInterval(() => {
       if (time < new Date() && !holdEnd) {
         timerEnded?.();
