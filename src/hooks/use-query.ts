@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useQuery<R>({
   query,
@@ -13,18 +13,18 @@ export default function useQuery<R>({
   const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
 
-  useEffect(() => {
-    refetch();
-  }, [...key]);
-
-  function refetch() {
+  const refetch = useCallback(() => {
     setIsFetching(true);
     query().then((data) => {
       setData(data);
       setIsLoading(false);
       setIsFetching(false);
     });
-  }
+  }, [query]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, ...key]);
 
   return { data, refetch, isLoading, isFetching };
 }
