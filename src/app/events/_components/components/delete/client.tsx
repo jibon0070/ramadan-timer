@@ -1,5 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import useMutation from "@/hooks/use-mutation";
 import { useToast } from "@/hooks/use-toast";
 import { TrashIcon } from "lucide-react";
 import deleteAction from "./actions/delete.action";
@@ -14,7 +14,7 @@ export default function DeleteEvent({
   const { toast } = useToast();
 
   const deleteMutation = useMutation({
-    query: deleteAction,
+    mutationFn: deleteAction,
     onSuccess: (r) => {
       if (r.success) {
         toast({
@@ -33,7 +33,7 @@ export default function DeleteEvent({
   });
 
   function deleteEvent() {
-    if (deleteMutation.isLoading) return;
+    if (deleteMutation.isPending) return;
 
     if (!window.confirm("Are you sure you want to delete this event?")) return;
 
