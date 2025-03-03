@@ -43,6 +43,7 @@ export default function TimeDisplay({
         {!!currentDate &&
           formatRemainingTime(time.getTime() - currentDate.getTime())}
       </div>
+      <div>{currentDate?.toLocaleTimeString()}</div>
       <div>
         {!!currentDate &&
           time.getTime() - currentDate.getTime() >= 1000 * 60 * 60 * 24 &&
