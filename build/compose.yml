@@ -10,6 +10,7 @@ services:
       - "8000:3000"
 
   db-prod:
+    restart: always
     image: postgres:16
     container_name: event-timer-db-prod
     environment:
