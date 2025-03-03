@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import getEventsAction, { Event } from "./actions/get-events.action";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import getEventsAction from "./actions/get-events.action";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -22,22 +22,36 @@ import { Button } from "@/components/ui/button";
 
 function useEngine() {
   const { toast } = useToast();
-  const [events, setEvents] = useState<Event[]>([]);
+  const [pages, setPages] = useState<
+    Awaited<ReturnType<typeof getEventsAction>>[]
+  >([]);
 
   const queryKey = ["events"];
-  const query = useQuery({
+
+  const query = useInfiniteQuery({
     queryKey,
-    queryFn: getEventsAction,
+    queryFn: (options) => {
+      return getEventsAction(options.pageParam);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPage) => {
+      if (allPage.length < ((lastPage.success && lastPage.totalPage) || 0)) {
+        return allPage.length + 1;
+      }
+
+      return undefined;
+    },
   });
 
   useEffect(() => {
     if (query.data) {
-      if (query.data.success) {
-        setEvents(query.data.events);
+      const lastPage = query.data.pages.at(-1);
+      if (lastPage?.success) {
+        setPages(query.data.pages);
       } else {
         toast({
           title: "Error",
-          description: query.data.message,
+          description: lastPage?.message,
           variant: "destructive",
         });
       }
@@ -50,57 +64,79 @@ function useEngine() {
     client.invalidateQueries({ queryKey });
   }
 
-  return { events, isLoading: query.isLoading, refetch };
+  return {
+    pages,
+    isLoading: query.isLoading,
+    refetch,
+    fetchNextPage: query.fetchNextPage,
+    hasNextPage: query.hasNextPage,
+  };
 }
 
 export default function Client({ role }: { role: Role | "visitor" }) {
-  const { events, isLoading, refetch } = useEngine();
+  const { pages, isLoading, refetch, fetchNextPage, hasNextPage } = useEngine();
 
   return isLoading ? (
     <Loading />
-  ) : !!events.length ? (
-    <Table>
-      <Header />
-      <TableBody>
-        {events.map((event) => (
-          <TableRow key={event.id}>
-            <TableCell className="whitespace-nowrap">
-              {event.timestamp.toLocaleDateString()}{" "}
-              {event.timestamp.toLocaleTimeString()}
-            </TableCell>
-            <TableCell className="whitespace-nowrap">{event.name}</TableCell>
-            <TableCell>{event.description}</TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Button
-                  asChild
-                  size={`icon`}
-                  className="rounded-full"
-                  variant={`secondary`}
-                >
-                  <Link href={`/events/view/${event.id}`} title="View Event">
-                    <View />
-                  </Link>
-                </Button>
-                {role === "admin" && (
-                  <>
-                    <Button asChild size={"icon"} className="rounded-full">
+  ) : !!pages.map((page) => (page.success && page.events) || []).at(-1)
+      ?.length ? (
+    <>
+      <Table>
+        <Header />
+        <TableBody>
+          {pages.map((page) => {
+            if (!page.success) return null;
+            return page.events.map((event) => (
+              <TableRow key={event.id}>
+                <TableCell className="whitespace-nowrap">
+                  {event.timestamp.toLocaleDateString()}{" "}
+                  {event.timestamp.toLocaleTimeString()}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {event.name}
+                </TableCell>
+                <TableCell>{event.description}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button
+                      asChild
+                      size={`icon`}
+                      className="rounded-full"
+                      variant={`secondary`}
+                    >
                       <Link
-                        href={`/events/edit/${event.id}`}
-                        title="Edit Event"
+                        href={`/events/view/${event.id}`}
+                        title="View Event"
                       >
-                        <EditIcon />
+                        <View />
                       </Link>
                     </Button>
-                    <DeleteEvent id={event.id} refetch={refetch} />
-                  </>
-                )}
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                    {role === "admin" && (
+                      <>
+                        <Button asChild size={"icon"} className="rounded-full">
+                          <Link
+                            href={`/events/edit/${event.id}`}
+                            title="Edit Event"
+                          >
+                            <EditIcon />
+                          </Link>
+                        </Button>
+                        <DeleteEvent id={event.id} refetch={refetch} />
+                      </>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ));
+          })}
+        </TableBody>
+      </Table>
+      {hasNextPage && (
+        <div className="flex justify-center">
+          <Button onClick={() => fetchNextPage()}>Load More</Button>
+        </div>
+      )}
+    </>
   ) : (
     <p className={cn({ "text-center": role === "visitor" })}>
       No Events Found.
