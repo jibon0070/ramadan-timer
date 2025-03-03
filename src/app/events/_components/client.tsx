@@ -1,6 +1,6 @@
 "use client";
 
-import useQuery from "@/hooks/use-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import getEventsAction, { Event } from "./actions/get-events.action";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -24,9 +24,10 @@ function useEngine() {
   const { toast } = useToast();
   const [events, setEvents] = useState<Event[]>([]);
 
+  const queryKey = ["events"];
   const query = useQuery({
-    key: [],
-    query: getEventsAction,
+    queryKey,
+    queryFn: getEventsAction,
   });
 
   useEffect(() => {
@@ -43,7 +44,13 @@ function useEngine() {
     }
   }, [query.data, toast]);
 
-  return { events, isLoading: query.isLoading, refetch: query.refetch };
+  const client = useQueryClient();
+
+  function refetch() {
+    client.invalidateQueries({ queryKey });
+  }
+
+  return { events, isLoading: query.isLoading, refetch };
 }
 
 export default function Client({ role }: { role: Role | "visitor" }) {

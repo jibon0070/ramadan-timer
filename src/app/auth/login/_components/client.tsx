@@ -14,10 +14,10 @@ import schema from "./schemas/schema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import useMutation from "@/hooks/use-mutation";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import submitAction from "./actions/submit.action";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Client() {
   const { toast } = useToast();
@@ -32,7 +32,7 @@ export default function Client() {
   });
 
   const submitMutation = useMutation({
-    query: submitAction,
+    mutationFn: submitAction,
     onSuccess: (r) => {
       if (r.success) {
         toast({
@@ -51,7 +51,7 @@ export default function Client() {
   });
 
   const submit = form.handleSubmit((data) => {
-    if (submitMutation.isLoading) return;
+    if (submitMutation.isPending) return;
 
     submitMutation.mutate(data);
   });
