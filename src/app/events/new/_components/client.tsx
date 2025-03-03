@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import schema from "../../_partials/schemas/new-and-edit.schema";
 import { Button } from "@/components/ui/button";
-import useMutation from "@/hooks/use-mutation";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import submitAction from "./actions/submit.action";
 import Fields from "../../_partials/new-and-edit";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Client() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function Client() {
   }
 
   const submitMutation = useMutation({
-    query: submitAction,
+    mutationFn: submitAction,
     onSuccess: (r) => {
       if (r.success) {
         toast({
@@ -50,7 +50,7 @@ export default function Client() {
   });
 
   const submit = form.handleSubmit((data) => {
-    if (submitMutation.isLoading) return;
+    if (submitMutation.isPending) return;
 
     submitMutation.mutate(data);
   });
