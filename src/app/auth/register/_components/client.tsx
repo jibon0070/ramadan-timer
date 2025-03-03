@@ -12,12 +12,12 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import schema from "./schemas/schema";
-import useMutation from "@/hooks/use-mutation";
 import { useRouter } from "next/navigation";
 import saveAction from "./actions/save.action";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Client() {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function Client() {
   });
 
   const saveMutation = useMutation({
-    query: saveAction,
+    mutationFn: saveAction,
     onSuccess: (r) => {
       if (r.success) {
         toast({
@@ -51,7 +51,7 @@ export default function Client() {
   });
 
   const save = form.handleSubmit((data) => {
-    if (saveMutation.isLoading) {
+    if (saveMutation.isPending) {
       return;
     }
 
