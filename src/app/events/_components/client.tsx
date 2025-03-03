@@ -28,7 +28,7 @@ function useEngine() {
 
   const queryKey = ["events"];
 
-  const query = useInfiniteQuery({
+  const { hasNextPage, fetchNextPage, ...query } = useInfiniteQuery({
     queryKey,
     queryFn: (options) => {
       return getEventsAction(options.pageParam);
@@ -64,17 +64,34 @@ function useEngine() {
     client.invalidateQueries({ queryKey });
   }
 
+  const [ref, loadingRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(() => {
+      if (hasNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    if (ref) {
+      observer.observe(ref);
+    }
+    return () => {
+      if (ref) observer.unobserve(ref);
+    };
+  }, [hasNextPage, fetchNextPage, ref]);
+
   return {
     pages,
     isLoading: query.isLoading,
     refetch,
-    fetchNextPage: query.fetchNextPage,
-    hasNextPage: query.hasNextPage,
+    hasNextPage,
+    loadingRef,
   };
 }
 
 export default function Client({ role }: { role: Role | "visitor" }) {
-  const { pages, isLoading, refetch, fetchNextPage, hasNextPage } = useEngine();
+  const { pages, isLoading, refetch, hasNextPage, loadingRef } = useEngine();
 
   return isLoading ? (
     <Loading />
@@ -132,8 +149,10 @@ export default function Client({ role }: { role: Role | "visitor" }) {
         </TableBody>
       </Table>
       {hasNextPage && (
-        <div className="flex justify-center">
-          <Button onClick={() => fetchNextPage()}>Load More</Button>
+        <div className="flex justify-center" ref={loadingRef}>
+          <div className="size-7 bg-gray-400 rounded-full p-1 animate-spin">
+            <div className="size-2 bg-white rounded-full" />
+          </div>
         </div>
       )}
     </>
