@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import saveAction from "./actions/save.action";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function formatDate(date: Date): string {
   return `${date.getFullYear().toString().padStart(4, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}T${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, `0`)}`;
@@ -30,6 +30,7 @@ function useEngine({ id, name, description, timestamp, yearly }: Props) {
   });
   const router = useRouter();
   const { toast } = useToast();
+  const client = useQueryClient();
 
   useEffect(() => {
     form.reset({
@@ -50,6 +51,7 @@ function useEngine({ id, name, description, timestamp, yearly }: Props) {
     onSuccess: (r) => {
       if (r.success) {
         toast({ title: "Success", description: "Event updated successfully" });
+        client.invalidateQueries({ queryKey: ["events"] });
         back();
       } else
         toast({
